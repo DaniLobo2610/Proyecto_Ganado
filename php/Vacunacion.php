@@ -2,11 +2,11 @@
 session_start(); // Asegura que la sesión está iniciada
 
 // Conexión a la base de datos
-include("php/conexion.php");
+include("conexion.php");
 
 // Verificar si el usuario está autenticado y obtener su ID
 if (!isset($_SESSION['ID'])) {
-    die("<script>alert('Error: No hay un usuario autenticado.'); window.location.href = 'php/index.php';</script>");
+    die("<script>alert('Error: No hay un usuario autenticado.'); window.location.href = 'index.php';</script>");
 }
 
 $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
@@ -17,13 +17,14 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ganadería</title>
+    <title>Vacunaciones</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         body {
-            background: url('images/Fondito.jpg') no-repeat center center;
+            background: url('../images/Fondito.jpg') no-repeat center center;
             background-size: cover;
             background-attachment: fixed;
+            width: 100%;
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
@@ -31,20 +32,23 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             flex-direction: column;
             min-height: 100vh;
             transition: margin-left 0.3s ease; /* Transición suave al cambiar el tamaño */
+            overflow-x: hidden; /* Evita el desbordamiento horizontal */
         }
     
         header {
-            background: url('images/banner1.png') no-repeat center center;
+            width: 100%;
+            background: url('../images/banner1.png') no-repeat center center;
             background-size: cover;
             color: white;
             font-size: 3em;
             font-weight: bold;
             text-align: center;
-            padding: 150px 0;
+            padding: 25px 0;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
             position: relative;
             z-index: 1;
             background-attachment: fixed;
+            overflow: hidden;
         }
     
         header::before {
@@ -106,8 +110,13 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
         /* Clase que ajusta el contenido cuando el menú está abierto */
         body.menu-open .content {
-            margin-left: 250px; /* Deja espacio para el menú */
+            margin-left: 250px; 
+            
         }
+
+        * {
+    box-sizing: border-box;
+}
 
         .content {
             flex: 1;
@@ -119,15 +128,15 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             background: #222;
             color: white;
             text-align: center;
-            padding: 30px;
+            padding: 20px;
             width: 100%;
             position: relative;
-            z-index: 30;
+            z-index: 10;
         }
 
         .footer a {
             color: white;
-            margin: 0 20px;
+            margin: 0 10px;
             text-decoration: none;
             font-size: 20px;
         }
@@ -136,18 +145,14 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             color: #ffcc00;
         }
 
-        * {
-    box-sizing: border-box;
-}
-
         .user-info {
-    padding: 10px;
+    padding: 12px;
     display: flex;
     align-items: center;
     border-top: 1px solid #bd1212;
     background-color: #222;
     color: white;
-    font-size: 12px;
+    font-size: 13px;
     gap: 5px;
 }
 
@@ -165,6 +170,75 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     .logout-icon:hover {
         color:rgb(255, 255, 255); 
     }
+
+
+
+
+    .login-container {
+        box-sizing: content-box;
+            width: 300px;
+            margin: -30px auto;
+            padding: 30px;
+            background-color: #333;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .login-container h2 {
+            color: red;
+            margin-bottom: 20px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #444;
+            color: white;
+            border: 1px solid #888;
+            border-radius: 5px;
+        }
+        .input-field::placeholder {
+            color: #bbb;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #cc0000;
+        }
+        .signup-link {
+            display: block;
+            margin-top: 10px;
+            color: white;
+            text-decoration: none;
+        }
+        .signup-link:hover {
+            color: red;
+        }
+
+     
+.message {
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.message.success {
+    background-color: #4CAF50; 
+    color: white;
+}
+
+.message.error {
+    background-color: #f44336;
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -189,7 +263,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             ?>
              
         <?php if (isset($_SESSION['nombre'])): ?>
-            <a href="php/logout.php" class="logout-icon" title="Cerrar sesión">
+            <a href="logout.php" class="logout-icon" title="Cerrar sesión">
                 <i class="fas fa-door-open"></i> 
             </a>
         <?php endif; ?>
@@ -198,8 +272,8 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
        
     </div>
 
-    <a href="php/AddAnimal.php">Agregar Ganado</a>
-        <a href="php/vacunacion.php">Vacunación</a>
+        <a href="../Inicio.php">Inicio</a>
+        <a href="AddAnimal.php">Agregar Ganado</a>
 
         
 
@@ -208,13 +282,41 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
 
     <div class="content">
-        <p>contenido.</p>
+    <div class="login-container">
+ 
+ <img src="../images/Toro.png" alt="Logo de Proyecto">
+
+     <h2>¿A quien quieres vacunar?</h2>
+     
+     <form action="vacunacion.php" method="POST">
+
+     <select name="Animal" class="input-field" required><br>
+        <option selected disabled>--Seleccionar Paciente--</option>
+        <?php
+include("conexion.php");
+// Consulta para obtener las pólizas
+$sql = $conexion->query("SELECT * FROM animales ");
+while ($resultado = $sql->fetch_assoc()) {
+    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] . "</option>";
+}
+?>
+</select>
+     <input type="text" class="input-field" name="Fecha" placeholder="Fecha de vacunación (año-mes-dia)" required><br>
+     <input type="text"class="input-field" name="Vacuna" placeholder="Nombre de la vacuna" required><br>
+     <textarea class="input-field" name="comentarios" rows="4"  placeholder="Detalles de la vacunación"></textarea><br>
+         
+        
+        
+         <button type="submit" class="btn">Agregar</button>
+     </form>
+     
+ </div>
     </div>
 
     <footer class="footer">
         <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
         <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
-        <a href="mailto:correo@example.com"><i class="fas fa-envelope"></i> Correo</a>
+        <a href="danilobo2018@gmail.com"><i class="fas fa-envelope"></i> Correo</a>
         <a href="tel:+123456789"><i class="fas fa-phone"></i> +504 9945-4789</a>
     </footer>
 
@@ -237,3 +339,30 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     </script>
 </body>
 </html>
+<?php
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $IdAnimal = trim(!empty($_POST['Animal'])) ? $_POST['Animal'] : "NULL";
+    $Fecha = trim($_POST['Fecha']);
+    $Vacuna = trim($_POST['Vacuna']);
+    $Com = trim($_POST['comentarios']);
+
+    // Validar que los campos requeridos no estén vacíos
+    if (empty($IdAnimal) || empty($Fecha) || empty($Vacuna) || empty($Com)) {
+        echo "<script>alert('Error: Los campos Animal, Fecha, Vacuna y Comentarios son obligatorios.'); window.history.back();</script>";
+        exit();
+    }
+
+    // Insertar datos en la base de datos
+    $sqlPersona = "INSERT INTO vacunas (IdAnimal, FechaAplicacion, Vacuna, DetallesVacunacion)
+                   VALUES ('$IdAnimal', '$Fecha', '$Vacuna', '$Com')";
+
+    if (mysqli_query($conexion, $sqlPersona)) {
+        echo "<script>alert('Registro exitoso.'); window.location.href = 'vacunacion.php';</script>";
+    } else {
+        echo "<script>alert('Error al registrar: " . mysqli_error($conexion) . "'); window.history.back();</script>";
+    }
+}
+?>
+    

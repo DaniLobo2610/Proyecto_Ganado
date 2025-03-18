@@ -273,10 +273,8 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     </div>
 
         <a href="../Inicio.php">Inicio</a>
-        <a href="#">Productos</a>
-        <a href="#">Servicios</a>
-        <a href="#">Nosotros</a>
-        <a href="#">Contacto</a>
+        <a href="vacunacion.php">Vacunación</a>
+
         
 
         
