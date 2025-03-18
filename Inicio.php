@@ -165,6 +165,37 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     .logout-icon:hover {
         color:rgb(255, 255, 255); 
     }
+
+    .submenu {
+    position: relative;
+}
+
+.submenu-content {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    background: #333;
+    width: 200px;
+    padding-top: 10px;
+}
+
+.submenu-content a {
+    display: block;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid #bd1212;
+}
+
+.submenu-content a:hover {
+    background: #bd1212;
+}
+
+
+.submenu:hover .submenu-content {
+    display: block;
+}  
     </style>
 </head>
 <body>
@@ -199,8 +230,16 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     </div>
 
     <a href="php/AddAnimal.php">Agregar Ganado</a>
-        <a href="php/vacunacion.php">Vacunación</a>
-
+    <div class="submenu">
+        <a href="#" class="submenu-toggle">Tratamientos y vacunas</a>
+        <div class="submenu-content">
+            <a href="php/vacunacion.php">Vacunación</a>
+            <a href="#">Registro de Vacunas</a>
+            <a href="php/Tratamiento.php">Tratamientos</a>
+            <a href="#">Registro de Tratamientos</a>
+        </div>
+    </div>
+    <a href="php/Insemina.php">Inseminación Artificial</a>
         
 
         
