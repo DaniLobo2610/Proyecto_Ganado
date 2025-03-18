@@ -313,7 +313,15 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         <div class="submenu-content">
             <a href="vacunacion.php">Vacunación</a>
             <a href="#">Registro de Vacunas</a>
+            <a href="Tratamiento.php">Tratamientos</a>
             <a href="#">Registro de Tratamientos</a>
+        </div>
+    </div>
+    <div class="submenu">
+        <a href="Insemina.php" class="submenu-toggle">Inseminación Artificial</a>
+        <div class="submenu-content">
+            <a href="#">Registro de Inseminaciones</a>
+
         </div>
     </div>
     
