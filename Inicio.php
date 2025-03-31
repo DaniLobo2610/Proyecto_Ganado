@@ -19,6 +19,11 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ganadería</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/4.2.8/css/tooltipster.bundle.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/4.2.8/js/tooltipster.bundle.min.js"></script>
     <style>
         body {
             background: url('images/Fondito.jpg') no-repeat center center;
@@ -196,6 +201,16 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 .submenu:hover .submenu-content {
     display: block;
 }  
+
+#calendar {
+    width: 90%;
+    margin: 20px auto;
+    max-width: 1200px;
+    background: white; /* Fondo blanco para el calendario */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -246,14 +261,79 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
         </div>
     </div>
-        
+    <a href="php/AddEvento.php">Agregar Eventos</a>
+    <div class="submenu">
+        <a href="php/reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
+        <div class="submenu-content">
+            <a href="php/Addlugar.php">Agregar Nuevo Lugar</a>
+
+        </div>    
 
         
     </nav>
 
 
     <div class="content">
-        <p>contenido.</p>
+    <h2 style="text-align: center;">Calendario de Actividades</h2>
+    <div id="calendar"></div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    let calendarEl = document.getElementById('calendar');
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        editable: true,
+        events: 'php/eventos.php',
+
+        eventDrop: function(info) {
+            let id = info.event.id;
+            let fechaInicio = info.event.startStr;
+            let fechaFin = info.event.endStr;
+
+            fetch('actualizar_evento.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `id=${id}&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`
+            });
+        },
+
+        eventContent: function(info) {
+            return {
+                html: `<b>${info.event.title}</b><br><small>${info.event.extendedProps.description || ''}</small>`
+            };
+        },
+
+        eventClick: function(info) {
+            let eventoId = info.event.id;
+            let descripcion = info.event.extendedProps.description || "Sin descripción";
+
+            let confirmacion = confirm(`Descripción: ${descripcion}\n\n¿Ya realizaste este evento? Si confirmas, se eliminará.`);
+
+            if (confirmacion) {
+                fetch('php/Eliminarevento.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${eventoId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        info.event.remove();
+                        alert("Evento eliminado correctamente.");
+                    } else {
+                        alert("Error al eliminar el evento.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            }
+        }
+    });
+
+    calendar.render();
+});
+
+    </script>
     </div>
 
     <footer class="footer">
@@ -264,21 +344,40 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     </footer>
 
     <script>
-        let menuBtn = document.getElementById('menuBtn');
-        let menu = document.getElementById('menu');
-        let isOpen = false;
+    let menuBtn = document.getElementById('menuBtn');
+    let menu = document.getElementById('menu');
+    
+    // Recupera el estado guardado del menú (si está abierto o cerrado)
+    let isOpen = localStorage.getItem('menuOpen') === 'true';
 
-        menuBtn.addEventListener('click', function() {
-            isOpen = !isOpen;
-            menu.classList.toggle('active');
-            menuBtn.style.left = isOpen ? '10px' : '20px';
-            // Cambiar clase al body para ajustar el contenido
-            if (isOpen) {
-                document.body.classList.add('menu-open');
-            } else {
-                document.body.classList.remove('menu-open');
-            }
-        });
-    </script>
+    // Si el menú está abierto en el almacenamiento local, aplicamos los cambios correspondientes
+    if (isOpen) {
+        menu.classList.add('active');
+        document.body.classList.add('menu-open');
+        menuBtn.style.left = '10px'; // Ajusta la posición si el menú está abierto
+    } else {
+        menu.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        menuBtn.style.left = '20px'; // Ajusta la posición si el menú está cerrado
+    }
+
+    // Maneja el clic en el botón del menú
+    menuBtn.addEventListener('click', function() {
+        isOpen = !isOpen; // Cambia el estado del menú
+        menu.classList.toggle('active');
+        menuBtn.style.left = isOpen ? '10px' : '20px'; // Cambia la posición del botón
+
+        // Cambia el estado del body para ajustar el contenido
+        if (isOpen) {
+            document.body.classList.add('menu-open');
+        } else {
+            document.body.classList.remove('menu-open');
+        }
+
+        // Guarda el estado del menú en localStorage
+        localStorage.setItem('menuOpen', isOpen);
+    });
+</script>
+
 </body>
 </html>

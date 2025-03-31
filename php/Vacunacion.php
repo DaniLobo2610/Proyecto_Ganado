@@ -323,8 +323,13 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
         </div>
     </div>  
+    <a href="AddEvento.php">Agregar Eventos</a>
+    <div class="submenu">
+        <a href="reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
+        <div class="submenu-content">
+            <a href="Addlugar.php">Agregar Nuevo Lugar</a>
 
-        
+        </div>      
     </nav>
 
 
@@ -368,22 +373,41 @@ while ($resultado = $sql->fetch_assoc()) {
     </footer>
 
     <script>
-        let menuBtn = document.getElementById('menuBtn');
-        let menu = document.getElementById('menu');
-        let isOpen = false;
+    let menuBtn = document.getElementById('menuBtn');
+    let menu = document.getElementById('menu');
+    
+    // Recupera el estado guardado del menú (si está abierto o cerrado)
+    let isOpen = localStorage.getItem('menuOpen') === 'true';
 
-        menuBtn.addEventListener('click', function() {
-            isOpen = !isOpen;
-            menu.classList.toggle('active');
-            menuBtn.style.left = isOpen ? '10px' : '20px';
-            // Cambiar clase al body para ajustar el contenido
-            if (isOpen) {
-                document.body.classList.add('menu-open');
-            } else {
-                document.body.classList.remove('menu-open');
-            }
-        });
-    </script>
+    // Si el menú está abierto en el almacenamiento local, aplicamos los cambios correspondientes
+    if (isOpen) {
+        menu.classList.add('active');
+        document.body.classList.add('menu-open');
+        menuBtn.style.left = '10px'; // Ajusta la posición si el menú está abierto
+    } else {
+        menu.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        menuBtn.style.left = '20px'; // Ajusta la posición si el menú está cerrado
+    }
+
+    // Maneja el clic en el botón del menú
+    menuBtn.addEventListener('click', function() {
+        isOpen = !isOpen; // Cambia el estado del menú
+        menu.classList.toggle('active');
+        menuBtn.style.left = isOpen ? '10px' : '20px'; // Cambia la posición del botón
+
+        // Cambia el estado del body para ajustar el contenido
+        if (isOpen) {
+            document.body.classList.add('menu-open');
+        } else {
+            document.body.classList.remove('menu-open');
+        }
+
+        // Guarda el estado del menú en localStorage
+        localStorage.setItem('menuOpen', isOpen);
+    });
+</script>
+
 </body>
 </html>
 <?php

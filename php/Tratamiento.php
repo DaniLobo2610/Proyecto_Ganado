@@ -323,8 +323,13 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
         </div>
     </div>
- 
+    <a href="AddEvento.php">Agregar Eventos</a>  
+    <div class="submenu">
+        <a href="reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
+        <div class="submenu-content">
+            <a href="Addlugar.php">Agregar Nuevo Lugar</a>
 
+        </div>  
         
     </nav>
 
@@ -352,7 +357,7 @@ while ($resultado = $sql->fetch_assoc()) {
      <input type="text" class="input-field" name="Fecha" placeholder="Fecha inicio de Tratamiento (año-mes-dia)" required><br>
      <input type="text" class="input-field" name="Fecha2" placeholder="Fin de Tratamiento (año-mes-dia) (opcional)" ><br>
      <textarea class="input-field" name="comentarios" rows="4"  placeholder="Detalles del Tratamiento"></textarea><br>
-     <input type="text"class="input-field" name="Medicamento" placeholder="¿Qué medicamento le dio?" required><br>
+     <input type="text"class="input-field" name="Medicamento" placeholder="¿Qué medicamento le dio?" ><br>
         
         
          <button type="submit" class="btn">Agregar</button>
@@ -369,22 +374,41 @@ while ($resultado = $sql->fetch_assoc()) {
     </footer>
 
     <script>
-        let menuBtn = document.getElementById('menuBtn');
-        let menu = document.getElementById('menu');
-        let isOpen = false;
+    let menuBtn = document.getElementById('menuBtn');
+    let menu = document.getElementById('menu');
+    
+    // Recupera el estado guardado del menú (si está abierto o cerrado)
+    let isOpen = localStorage.getItem('menuOpen') === 'true';
 
-        menuBtn.addEventListener('click', function() {
-            isOpen = !isOpen;
-            menu.classList.toggle('active');
-            menuBtn.style.left = isOpen ? '10px' : '20px';
-            // Cambiar clase al body para ajustar el contenido
-            if (isOpen) {
-                document.body.classList.add('menu-open');
-            } else {
-                document.body.classList.remove('menu-open');
-            }
-        });
-    </script>
+    // Si el menú está abierto en el almacenamiento local, aplicamos los cambios correspondientes
+    if (isOpen) {
+        menu.classList.add('active');
+        document.body.classList.add('menu-open');
+        menuBtn.style.left = '10px'; // Ajusta la posición si el menú está abierto
+    } else {
+        menu.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        menuBtn.style.left = '20px'; // Ajusta la posición si el menú está cerrado
+    }
+
+    // Maneja el clic en el botón del menú
+    menuBtn.addEventListener('click', function() {
+        isOpen = !isOpen; // Cambia el estado del menú
+        menu.classList.toggle('active');
+        menuBtn.style.left = isOpen ? '10px' : '20px'; // Cambia la posición del botón
+
+        // Cambia el estado del body para ajustar el contenido
+        if (isOpen) {
+            document.body.classList.add('menu-open');
+        } else {
+            document.body.classList.remove('menu-open');
+        }
+
+        // Guarda el estado del menú en localStorage
+        localStorage.setItem('menuOpen', isOpen);
+    });
+</script>
+
 </body>
 </html>
 <?php
@@ -395,7 +419,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fecha_inicio = trim($_POST['Fecha']);
     $fecha_fin = !empty($_POST['Fecha2']) ? $_POST['Fecha2'] : "Tratamiento Vigente";
     $comentarios = trim($_POST['comentarios']);
-    $medicamento = trim($_POST['Medicamento']);
+    $medicamento = !empty($_POST['Medicamento']) ? $_POST['Medicamento'] : "NULL";
+    $titulo = $_POST['titulo'];
+    $fecha_inicio = $_POST['Fecha'];
+    $fecha_fin = $_POST['Fecha2'];
 
 
     if (empty($id_animal) || empty($fecha_inicio) || empty($comentarios) || empty($medicamento)) {
@@ -407,7 +434,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "INSERT INTO Tratamiento (IdAnimal, FechaInicio, FechaFin, Detalles, Medicamento)
             VALUES ('$id_animal', '$fecha_inicio', '$fecha_fin', '$comentarios', '$medicamento')";
 
+            
     if (mysqli_query($conexion, $sql)) {
+        echo "<script>alert('Registro exitoso.'); window.location.href = 'Tratamiento.php';</script>";
+    } else {
+        echo "<script>alert('Error al registrar: " . mysqli_error($conexion) . "'); window.history.back();</script>";
+    }
+
+$sql2 = "INSERT INTO eventos (titulo, fecha_inicio, fecha_fin, descripcion,Iduser) 
+        VALUES ('$titulo', '$fecha_inicio', '$fecha_fin', '$comentarios','$id_usuario')";        
+
+    if (mysqli_query($conexion, $sql2)) {
         echo "<script>alert('Registro exitoso.'); window.location.href = 'Tratamiento.php';</script>";
     } else {
         echo "<script>alert('Error al registrar: " . mysqli_error($conexion) . "'); window.history.back();</script>";

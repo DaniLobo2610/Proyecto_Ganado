@@ -6,7 +6,7 @@ include("conexion.php");
 
 // Verificar si el usuario está autenticado y obtener su ID
 if (!isset($_SESSION['ID'])) {
-    die("<script>alert('Error: No hay un usuario autenticado.'); window.location.href = 'index.php';</script>");
+    die("<script>alert('Error: No hay un usuario autenticado.'); window.location.href = 'php/index.php';</script>");
 }
 
 $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
@@ -17,14 +17,22 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Ganado</title>
+    <title>Reporte de establo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/4.2.8/css/tooltipster.bundle.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/4.2.8/js/tooltipster.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link rel="stylesheet" as="style" onload="this.rel='stylesheet'" 
+          href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter:wght@400;500;700;900&amp;family=Noto+Sans:wght@400;500;700;900" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <style>
         body {
             background: url('../images/Fondito.jpg') no-repeat center center;
             background-size: cover;
             background-attachment: fixed;
-            width: 100%;
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
@@ -32,23 +40,20 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             flex-direction: column;
             min-height: 100vh;
             transition: margin-left 0.3s ease; /* Transición suave al cambiar el tamaño */
-            overflow-x: hidden; /* Evita el desbordamiento horizontal */
         }
     
         header {
-            width: 100%;
             background: url('../images/banner1.png') no-repeat center center;
             background-size: cover;
             color: white;
             font-size: 3em;
             font-weight: bold;
             text-align: center;
-            padding: 25px 0;
+            padding: 150px 0;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
             position: relative;
             z-index: 1;
             background-attachment: fixed;
-            overflow: hidden;
         }
     
         header::before {
@@ -110,13 +115,8 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
         /* Clase que ajusta el contenido cuando el menú está abierto */
         body.menu-open .content {
-            margin-left: 250px; 
-            
+            margin-left: 250px; /* Deja espacio para el menú */
         }
-
-        * {
-    box-sizing: border-box;
-}
 
         .content {
             flex: 1;
@@ -128,15 +128,15 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             background: #222;
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             width: 100%;
             position: relative;
-            z-index: 10;
+            z-index: 30;
         }
 
         .footer a {
             color: white;
-            margin: 0 10px;
+            margin: 0 20px;
             text-decoration: none;
             font-size: 20px;
         }
@@ -145,14 +145,18 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             color: #ffcc00;
         }
 
+        * {
+    box-sizing: border-box;
+}
+
         .user-info {
-    padding: 12px;
+    padding: 10px;
     display: flex;
     align-items: center;
     border-top: 1px solid #bd1212;
     background-color: #222;
     color: white;
-    font-size: 13px;
+    font-size: 12px;
     gap: 5px;
 }
 
@@ -171,76 +175,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         color:rgb(255, 255, 255); 
     }
 
-
-
-
-    .login-container {
-        box-sizing: content-box;
-            width: 300px;
-            margin: -30px auto;
-            padding: 30px;
-            background-color: #333;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .login-container h2 {
-            color: red;
-            margin-bottom: 20px;
-        }
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #444;
-            color: white;
-            border: 1px solid #888;
-            border-radius: 5px;
-        }
-        .input-field::placeholder {
-            color: #bbb;
-        }
-        .btn {
-            width: 100%;
-            padding: 10px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background-color: #cc0000;
-        }
-        .signup-link {
-            display: block;
-            margin-top: 10px;
-            color: white;
-            text-decoration: none;
-        }
-        .signup-link:hover {
-            color: red;
-        }
-
-     
-.message {
-    padding: 15px;
-    margin: 20px 0;
-    border-radius: 5px;
-    font-size: 16px;
-    text-align: center;
-}
-
-.message.success {
-    background-color: #4CAF50; 
-    color: white;
-}
-
-.message.error {
-    background-color: #f44336;
-    color: white;
-}
-
-.submenu {
+    .submenu {
     position: relative;
 }
 
@@ -270,6 +205,88 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 .submenu:hover .submenu-content {
     display: block;
 }  
+
+#calendar {
+
+    width: 90%;
+    margin: 20px auto;
+    max-width: 1200px;
+    background: white; /* Fondo blanco para el calendario */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+ /* Estilos generales para la tabla */
+ #animalTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de las celdas y bordes */
+#animalTable th, #animalTable td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+/* Estilo de las cabeceras de las columnas */
+#animalTable th {
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-size: 16px;
+}
+
+/* Asegurar que todas las filas tengan fondo blanco */
+#animalTable tr {
+    background-color: rgb(255, 255, 255);
+}
+
+/* Efecto hover sobre las filas */
+#animalTable tr:hover {
+    background-color: rgb(255, 0, 0);
+    cursor: pointer;
+}
+
+/* Estilo para las celdas del cuerpo de la tabla */
+#animalTable td {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Estilo para la tabla cuando no hay datos */
+#animalTable tbody tr.no-data td {
+    text-align: center;
+    color: #777;
+}
+
+
+/* Opcional: agregar paginación si lo necesitas */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 8px 12px;
+    background-color: black;  /* Fondo negro */
+    color: white;  /* Número blanco */
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;  /* Opcional: para que el número resalte más */
+}
+
+.pagination a:hover {
+    background-color: #333;  /* Fondo negro más claro al pasar el mouse */
+    color: #fff;  /* Asegura que el texto sea blanco al pasar el mouse */
+}
+
+       
     </style>
 </head>
 <body>
@@ -302,9 +319,9 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
        
     </div>
-
-        <a href="../Inicio.php">Inicio</a>
-        <div class="submenu">
+    <a href="../Inicio.php">Inicio</a>
+    <a href="AddAnimal.php">Agregar Ganado</a>
+    <div class="submenu">
         <a href="#" class="submenu-toggle">Tratamientos y vacunas</a>
         <div class="submenu-content">
             <a href="vacunacion.php">Vacunación</a>
@@ -320,83 +337,146 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
         </div>
     </div>
-    <a href="AddEvento.php">Agregar Eventos</a>
+    <a href="AddEvento.php">Agregar Eventos</a> 
     <div class="submenu">
         <a href="reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
         <div class="submenu-content">
             <a href="Addlugar.php">Agregar Nuevo Lugar</a>
 
-        </div>       
-
+        </div>  
         
     </nav>
 
 
     <div class="content">
-    <div class="login-container">
- 
- <img src="../images/Toro.png" alt="Logo de Proyecto">
+    <?php
+require 'conexion.php'; // Conexión a la base de datos
 
-     <h2>¡¡Agrega tu Ganado!!</h2>
-     <form action="AddAnimal.php" method="POST">
-     <input type="text" class="input-field" name="Nombre" placeholder="Nombre" required><br>
-         <input type="text" class="input-field" name="Raza" placeholder="Raza" required><br>
-         <input type="text"class="input-field" name="Edad" placeholder="Edad (año-mes-dia)" required><br>
-         <input type="text" class="input-field" name="Peso" placeholder="Peso en lbs" required><br>
-         <div class="input-field">
-              
-              <label>
-                <input type="radio" name="sexo" value="Hembra" />
-                Hembra
-              </label>
-              <label>
-                <input type="radio" name="sexo" value="Macho" />
-                Macho
-              </label>
-            
-            </div>
-            <select name="lugar" class="input-field" ><br>
-        <option selected disabled>--Selecciona a que lugar irá--</option>
-        <?php
-include("conexion.php");
-// Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM establo ");
-while ($resultado = $sql->fetch_assoc()) {
-    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['NOMBRE']  . " ---- está en: " . $resultado['UBICACION'] . "</option>";
-}
-?>
-</select>
-<br><br>
-        <select name="genealogia" class="input-field" required><br>
-        <option selected disabled>--Seleccionar Genealogia Padre--</option>
-        <?php
-include("conexion.php");
-// Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Macho'");
-while ($resultado = $sql->fetch_assoc()) {
-    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] . "</option>";
-}
-?>
-</select>
+$busqueda = $conexion->real_escape_string($_GET['search'] ?? '');
+$rows_per_page = intval($_GET['rows_per_page'] ?? 5);
+$page = max(intval($_GET['page'] ?? 1), 1);
+$offset = ($page - 1) * $rows_per_page;
 
-<select name="genealogia2" class="input-field" required><br>
-        <option selected disabled>--Seleccionar Genealogia Madre--</option>
-        <?php
-include("conexion.php");
-// Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Hembra'");
-while ($resultado = $sql->fetch_assoc()) {
-    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] .  "</option>";
+// Condiciones de búsqueda
+if (preg_match('/^[0-9]+$/', $busqueda)) { // Si es un número (ID)
+    $condicion = "animales.ID = '$busqueda'";
+} else { // Si es un texto (Nombre, Raza, Establo, Usuario)
+    $condicion = "
+        animales.Nombre LIKE '%$busqueda%' OR
+        animales.Raza LIKE '%$busqueda%' OR
+        usuario.Nombre LIKE '%$busqueda%' OR
+        usuario.Apellido LIKE '%$busqueda%' OR
+        establo.Nombre LIKE '%$busqueda%' OR
+        establo.Ubicacion LIKE '%$busqueda%'
+    ";
 }
-?>
-</select>
 
+// Cláusula WHERE
+$where_clause = "WHERE animales.Idestablo IS NOT NULL";
+if (!empty($busqueda)) {
+    $where_clause .= " AND ($condicion)";
+}
+
+// 💡 Asegurar que la paginación no cause pérdida de registros
+$consulta = $conexion->query("
+    SELECT DISTINCT animales.ID, animales.Nombre AS Nombre_Animal,
+        CASE
+            WHEN TIMESTAMPDIFF(YEAR, animales.Edad, CURDATE()) = 1 THEN '1 Año'
+            WHEN TIMESTAMPDIFF(YEAR, animales.Edad, CURDATE()) > 1 THEN 
+                CONCAT(TIMESTAMPDIFF(YEAR, animales.Edad, CURDATE()), ' Años')
+            WHEN TIMESTAMPDIFF(MONTH, animales.Edad, CURDATE()) = 1 THEN '1 Mes'
+            WHEN TIMESTAMPDIFF(MONTH, animales.Edad, CURDATE()) > 1 THEN 
+                CONCAT(TIMESTAMPDIFF(MONTH, animales.Edad, CURDATE()), ' Meses')
+            ELSE
+                'Menos de un mes'
+        END AS Edad,
+        animales.Raza,
+        animales.Sexo,
+        establo.Nombre AS Nombre_Establo,
+        establo.Ubicacion AS Ubicacion,
+        CONCAT(usuario.Nombre, ' ', usuario.Apellido) AS Nombre_Usuario
+    FROM animales
+    LEFT JOIN establo ON animales.Idestablo = establo.ID
+    LEFT JOIN usuario ON animales.IdUser = usuario.ID
+    $where_clause
+    ORDER BY animales.ID ASC -- 🔹 Ordenar siempre por ID para evitar saltos
+    LIMIT $rows_per_page OFFSET $offset
+");
+
+if (!$consulta) {
+    die("Error en la consulta SQL: " . $conexion->error);
+}
+
+// 🔹 Contar registros asegurando que sea la misma lógica que en la consulta principal
+$total_consulta = $conexion->query("
+    SELECT COUNT(DISTINCT animales.ID) as total 
+    FROM animales
+    LEFT JOIN establo ON animales.Idestablo = establo.ID
+    LEFT JOIN usuario ON animales.IdUser = usuario.ID
+    $where_clause
+");
+
+if (!$total_consulta) {
+    die("Error en la consulta COUNT: " . $conexion->error);
+}
+
+$total_rows = $total_consulta->fetch_assoc()['total'];
+$total_pages = ceil($total_rows / $rows_per_page);
+
+?>
+
+<form id="search-form">
+    <input type="text" name="search" placeholder="Buscar..." value="<?= htmlspecialchars($busqueda) ?>" oninput="submitForm()">
+    <select name="rows_per_page" onchange="submitForm()">
+        <option value="5" <?= ($rows_per_page == 5) ? 'selected' : '' ?>>5</option>
+        <option value="10" <?= ($rows_per_page == 10) ? 'selected' : '' ?>>10</option>
+        <option value="15" <?= ($rows_per_page == 15) ? 'selected' : '' ?>>15</option>
+    </select>
+</form>
+
+
+
+
+<script>
+    function submitForm() {
+        document.getElementById('search-form').submit();
+    }
+</script>
+
+
+    <table id="animalTable">
+        <tr>
+            <th>Nombre</th>
+            <th>Edad</th>
+            <th>sexo</th>
+            <th>Raza</th>
+            <th>Establo</th>
+            <th>Ubicación</th>
+            <th>Dueño</th>
         
-        
-         <button type="submit" class="btn">Agregar</button>
-     </form>
-     
- </div>
+        </tr>
+        <?php while ($row = $consulta->fetch_assoc()) { ?>
+            <tr>
+                <td><?= $row['Nombre_Animal'] ?></td>
+                <td><?= $row['Edad'] ?></td>
+                <td><?= $row['Sexo'] ?></td>
+                <td><?= $row['Raza'] ?></td>
+                <td><?= $row['Nombre_Establo'] ?></td>
+                <td><?= $row['Ubicacion'] ?></td>
+                <td><?= $row['Nombre_Usuario'] ?></td>
+                
+            </tr>
+        <?php } ?>
+    </table>
+
+    <div class="pagination">
+        <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+            <a href="?search=<?= htmlspecialchars($busqueda) ?>&rows_per_page=<?= $rows_per_page ?>&page=<?= $i ?>">
+                <?= $i ?>
+            </a>
+        <?php } ?>
+    </div>
+    
     </div>
 
     <footer class="footer">
@@ -444,34 +524,3 @@ while ($resultado = $sql->fetch_assoc()) {
 
 </body>
 </html>
-<?php
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $Nombre = trim($_POST['Nombre']);
-    $Raza = trim($_POST['Raza']);
-    $edad = trim($_POST['Edad']);
-    $Peso = trim($_POST['Peso']);
-    $Genealogia = !empty($_POST['genealogia']) ? $_POST['genealogia'] : "NULL";
-    $Genealogia2 = !empty($_POST['genealogia2']) ? $_POST['genealogia2'] : "NULL";
-    $sexo = !empty($_POST['sexo']) ? $_POST['sexo'] : "NULL";
-    $lugar = !empty($_POST['lugar']) ? $_POST['lugar'] : "NULL";
-
-    // Validar que los campos requeridos no estén vacíos
-    if (empty($Nombre) || empty($Raza) || empty($edad)) {
-        echo "<script>alert('Error: Los campos Nombre, Raza y Edad son obligatorios.'); window.history.back();</script>";
-        exit();
-    }
-
-    // Insertar datos en la base de datos
-    $sqlPersona = "INSERT INTO animales (Nombre, Raza, Edad, Peso, Sexo, GenealogiaPadre, GenealogiaMadre, IdUser, Idestablo)
-                   VALUES ('$Nombre', '$Raza', '$edad', '$Peso','$sexo', '$Genealogia', '$Genealogia2', '$id_usuario', '$lugar')";
-
-    if (mysqli_query($conexion, $sqlPersona)) {
-        echo "<script>alert('Registro exitoso.'); window.location.href = 'AddAnimal.php';</script>";
-    } else {
-        echo "<script>alert('Error al registrar: " . mysqli_error($conexion) . "'); window.history.back();</script>";
-    }
-}
-?>
-    

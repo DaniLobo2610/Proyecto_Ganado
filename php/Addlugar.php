@@ -17,7 +17,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Ganado</title>
+    <title>Creacion de Lugar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         body {
@@ -240,6 +240,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     color: white;
 }
 
+
 .submenu {
     position: relative;
 }
@@ -269,7 +270,24 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
 .submenu:hover .submenu-content {
     display: block;
-}  
+}
+
+.btn2 {
+            width: 100%;
+            padding: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #cc0000;
+        }
+        .btn2:hover {
+            background-color:rgb(20, 4, 142);
+        }
+
     </style>
 </head>
 <body>
@@ -304,12 +322,13 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     </div>
 
         <a href="../Inicio.php">Inicio</a>
+        <a href="AddAnimal.php">Agregar Ganado</a>
+
         <div class="submenu">
-        <a href="#" class="submenu-toggle">Tratamientos y vacunas</a>
+        <a href="#" class="submenu-toggle">Tratamientos y Vacunacion</a>
         <div class="submenu-content">
-            <a href="vacunacion.php">Vacunación</a>
-            <a href="#">Registro de Vacunas</a>
-            <a href="Tratamiento.php">Tratamientos</a>
+        <a href="#">Registro de Vacunas</a>
+        <a href="Tratamiento.php">Tratamientos</a>
             <a href="#">Registro de Tratamientos</a>
         </div>
     </div>
@@ -319,16 +338,14 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             <a href="#">Registro de Inseminaciones</a>
 
         </div>
-    </div>
+    </div>  
     <a href="AddEvento.php">Agregar Eventos</a>
     <div class="submenu">
         <a href="reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
         <div class="submenu-content">
             <a href="Addlugar.php">Agregar Nuevo Lugar</a>
 
-        </div>       
-
-        
+        </div>      
     </nav>
 
 
@@ -337,63 +354,18 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
  
  <img src="../images/Toro.png" alt="Logo de Proyecto">
 
-     <h2>¡¡Agrega tu Ganado!!</h2>
-     <form action="AddAnimal.php" method="POST">
-     <input type="text" class="input-field" name="Nombre" placeholder="Nombre" required><br>
-         <input type="text" class="input-field" name="Raza" placeholder="Raza" required><br>
-         <input type="text"class="input-field" name="Edad" placeholder="Edad (año-mes-dia)" required><br>
-         <input type="text" class="input-field" name="Peso" placeholder="Peso en lbs" required><br>
-         <div class="input-field">
-              
-              <label>
-                <input type="radio" name="sexo" value="Hembra" />
-                Hembra
-              </label>
-              <label>
-                <input type="radio" name="sexo" value="Macho" />
-                Macho
-              </label>
-            
-            </div>
-            <select name="lugar" class="input-field" ><br>
-        <option selected disabled>--Selecciona a que lugar irá--</option>
-        <?php
-include("conexion.php");
-// Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM establo ");
-while ($resultado = $sql->fetch_assoc()) {
-    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['NOMBRE']  . " ---- está en: " . $resultado['UBICACION'] . "</option>";
-}
-?>
-</select>
-<br><br>
-        <select name="genealogia" class="input-field" required><br>
-        <option selected disabled>--Seleccionar Genealogia Padre--</option>
-        <?php
-include("conexion.php");
-// Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Macho'");
-while ($resultado = $sql->fetch_assoc()) {
-    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] . "</option>";
-}
-?>
-</select>
+     <h2>¿Un Nuevo Lugar?</h2>
+     
+     <form action="Addlugar.php" method="POST">
 
-<select name="genealogia2" class="input-field" required><br>
-        <option selected disabled>--Seleccionar Genealogia Madre--</option>
-        <?php
-include("conexion.php");
-// Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Hembra'");
-while ($resultado = $sql->fetch_assoc()) {
-    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] .  "</option>";
-}
-?>
-</select>
-
+     <input type="text" class="input-field" name="Nombre" placeholder="Nombre del lugar" required><br>
+     <input type="text"class="input-field" name="Ubicacion" placeholder="Ubicacion del lugar" required><br>
+     
+         
         
         
-         <button type="submit" class="btn">Agregar</button>
+         <button type="submit" class="btn">Agregar</button><br><br>
+         <button type="submit" class="btn2" onclick="location.href='reportestablo.php'">Cancelar</button>
      </form>
      
  </div>
@@ -402,7 +374,7 @@ while ($resultado = $sql->fetch_assoc()) {
     <footer class="footer">
         <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
         <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
-        <a href="mailto:correo@example.com"><i class="fas fa-envelope"></i> Correo</a>
+        <a href="danilobo2018@gmail.com"><i class="fas fa-envelope"></i> Correo</a>
         <a href="tel:+123456789"><i class="fas fa-phone"></i> +504 9945-4789</a>
     </footer>
 
@@ -448,27 +420,16 @@ while ($resultado = $sql->fetch_assoc()) {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $Nombre = trim($_POST['Nombre']);
-    $Raza = trim($_POST['Raza']);
-    $edad = trim($_POST['Edad']);
-    $Peso = trim($_POST['Peso']);
-    $Genealogia = !empty($_POST['genealogia']) ? $_POST['genealogia'] : "NULL";
-    $Genealogia2 = !empty($_POST['genealogia2']) ? $_POST['genealogia2'] : "NULL";
-    $sexo = !empty($_POST['sexo']) ? $_POST['sexo'] : "NULL";
-    $lugar = !empty($_POST['lugar']) ? $_POST['lugar'] : "NULL";
-
-    // Validar que los campos requeridos no estén vacíos
-    if (empty($Nombre) || empty($Raza) || empty($edad)) {
-        echo "<script>alert('Error: Los campos Nombre, Raza y Edad son obligatorios.'); window.history.back();</script>";
-        exit();
-    }
+    $Nombre = trim(!empty($_POST['Nombre'])) ? $_POST['Nombre'] : "NULL";
+    $Ubicacion = trim($_POST['Ubicacion']);
 
     // Insertar datos en la base de datos
-    $sqlPersona = "INSERT INTO animales (Nombre, Raza, Edad, Peso, Sexo, GenealogiaPadre, GenealogiaMadre, IdUser, Idestablo)
-                   VALUES ('$Nombre', '$Raza', '$edad', '$Peso','$sexo', '$Genealogia', '$Genealogia2', '$id_usuario', '$lugar')";
+    $sqlPersona = "INSERT INTO establo (NOMBRE, UBICACION, IdUser)
+                   VALUES ('$Nombre', '$Ubicacion', '$id_usuario')";
+                   
 
     if (mysqli_query($conexion, $sqlPersona)) {
-        echo "<script>alert('Registro exitoso.'); window.location.href = 'AddAnimal.php';</script>";
+        echo "<script>alert('Registro exitoso.'); window.location.href = 'Addlugar.php';</script>";
     } else {
         echo "<script>alert('Error al registrar: " . mysqli_error($conexion) . "'); window.history.back();</script>";
     }
