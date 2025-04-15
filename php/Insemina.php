@@ -312,15 +312,15 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         <a href="#" class="submenu-toggle">Tratamientos y vacunas</a>
         <div class="submenu-content">
             <a href="vacunacion.php">Vacunación</a>
-            <a href="#">Registro de Vacunas</a>
+            <a href="reporteVacunas.php">Registro de Vacunas</a>
             <a href="Tratamiento.php">Tratamientos</a>
-            <a href="#">Registro de Tratamientos</a>
+            <a href="reporteTrata.php">Registro de Tratamientos</a>
         </div>
     </div>
     <div class="submenu">
         <a href="Insemina.php" class="submenu-toggle">Inseminación Artificial</a>
         <div class="submenu-content">
-            <a href="#">Registro de Inseminaciones</a>
+        <a href="reporteinsemina.php">Registro de Inseminaciones</a>
 
         </div>
     </div>
@@ -328,9 +328,11 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     <div class="submenu">
         <a href="reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
         <div class="submenu-content">
-            <a href="Addlugar.php">Agregar Nuevo Lugar</a>
-
-        </div>      
+        <a href="Addlugar.php">Agregar Nuevo Lugar</a>
+            <a href="cambiarestablo.php">Cambiar a ganado de Lugar</a>
+        </div>
+     </div>
+        <a href="UpDeAnimal.php">Vender o eliminar Ganado</a>      
 
         
     </nav>
@@ -350,20 +352,20 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         <?php
 include("conexion.php");
 // Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Hembra'");
+$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Hembra' AND IdUser = $id_usuario");
 while ($resultado = $sql->fetch_assoc()) {
     echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] .  "</option>";
 }
 ?>
 </select>
-     <input type="text" class="input-field" name="Fecha" placeholder="Fecha realizada (año-mes-dia)" required><br>
+     <input type="date" class="input-field" name="Fecha" placeholder="Fecha realizada (año-mes-dia)" required><br>
 
      <select name="Donador" class="input-field" required><br>
         <option selected disabled>--Seleccionar Donador--</option>
         <?php
 include("conexion.php");
 // Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Macho'");
+$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Macho' AND IdUser = $id_usuario");
 while ($resultado = $sql->fetch_assoc()) {
     echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] . "</option>";
 }
@@ -451,7 +453,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $resultado = trim($_POST['resultado']);
     $muestra = trim($_POST['Muestra']);
 
-
+    if (strtotime($fecha) ) {
+        // Convertir las fechas a un formato adecuado si es necesario
+        $fecha = date('Y-m-d', strtotime($fecha));
+    }
 
     if (empty($id_animal) || empty($id_animal2) || empty($fecha) || empty($resultado) || empty($muestra)) {
         echo "<script>alert('Error: Los campos Animal, Fecha, resultado y Muestra son obligatorios.'); window.history.back();</script>";

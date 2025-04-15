@@ -1,11 +1,18 @@
 <?php
+session_start();
 include("conexion.php");
+if (!isset($_SESSION['ID'])) {
+    die(json_encode(["error" => "Usuario no autenticado"]));
+}
+$id_usuario = $_SESSION['ID'];
+
 
 header('Content-Type: application/json');
 
 $sql = "SELECT id, titulo AS title, descripcion, fecha_inicio AS start, 
                DATE_ADD(fecha_fin, INTERVAL 1 DAY) AS end 
-        FROM eventos";
+        FROM eventos
+         WHERE Iduser = $id_usuario";
 $resultado = mysqli_query($conexion, $sql);
 
 $eventos = array();

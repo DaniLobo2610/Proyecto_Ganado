@@ -311,15 +311,15 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         <div class="submenu">
         <a href="#" class="submenu-toggle">Tratamientos y Vacunacion</a>
         <div class="submenu-content">
-        <a href="#">Registro de Vacunas</a>
+        <a href="reporteVacunas.php">Registro de Vacunas</a>
         <a href="Tratamiento.php">Tratamientos</a>
-            <a href="#">Registro de Tratamientos</a>
+        <a href="reporteTrata.php">Registro de Tratamientos</a>
         </div>
     </div>
     <div class="submenu">
         <a href="Insemina.php" class="submenu-toggle">Inseminación Artificial</a>
         <div class="submenu-content">
-            <a href="#">Registro de Inseminaciones</a>
+        <a href="reporteinsemina.php">Registro de Inseminaciones</a>
 
         </div>
     </div>  
@@ -327,9 +327,10 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     <div class="submenu">
         <a href="reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
         <div class="submenu-content">
-            <a href="Addlugar.php">Agregar Nuevo Lugar</a>
-
-        </div>      
+        <a href="Addlugar.php">Agregar Nuevo Lugar</a>
+            <a href="cambiarestablo.php">Cambiar a ganado de Lugar</a>
+        </div>       
+        <a href="UpDeAnimal.php">Vender o eliminar Ganado</a>      
     </nav>
 
 
@@ -347,13 +348,13 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         <?php
 include("conexion.php");
 // Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM animales ");
+$sql = $conexion->query("SELECT * FROM animales wHERE IdUser = $id_usuario");
 while ($resultado = $sql->fetch_assoc()) {
     echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] . "</option>";
 }
 ?>
 </select>
-     <input type="text" class="input-field" name="Fecha" placeholder="Fecha de vacunación (año-mes-dia)" required><br>
+     <input type="date" class="input-field" name="Fecha" placeholder="Fecha de vacunación (año-mes-dia)" required><br>
      <input type="text"class="input-field" name="Vacuna" placeholder="Nombre de la vacuna" required><br>
      <textarea class="input-field" name="comentarios" rows="4"  placeholder="Detalles de la vacunación"></textarea><br>
          
@@ -418,6 +419,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $Fecha = trim($_POST['Fecha']);
     $Vacuna = trim($_POST['Vacuna']);
     $Com = trim($_POST['comentarios']);
+
+    if (strtotime($Fecha) ) {
+        // Convertir las fechas a un formato adecuado si es necesario
+        $Fecha = date('Y-m-d', strtotime($Fecha));
+        
+    }
 
     // Validar que los campos requeridos no estén vacíos
     if (empty($IdAnimal) || empty($Fecha) || empty($Vacuna) || empty($Com)) {

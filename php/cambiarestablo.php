@@ -17,7 +17,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Ganado</title>
+    <title>Cambiar a ganado de Lugar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         body {
@@ -116,7 +116,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
         * {
     box-sizing: border-box;
-}
+    }
 
         .content {
             flex: 1;
@@ -154,14 +154,14 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     color: white;
     font-size: 13px;
     gap: 5px;
-}
+    }
 
-.user-info i {
+    .user-info i {
     margin-right: 10px;
     font-size: 18px;
-}
+    }
 
-.logout-icon {
+    .logout-icon {
         color: white;
         font-size: 14px;
         cursor: pointer;
@@ -240,6 +240,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     color: white;
 }
 
+
 .submenu {
     position: relative;
 }
@@ -269,7 +270,24 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
 .submenu:hover .submenu-content {
     display: block;
-}  
+}
+
+.btn2 {
+            width: 100%;
+            padding: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #cc0000;
+        }
+        .btn2:hover {
+            background-color:rgb(20, 4, 142);
+        }
+
     </style>
 </head>
 <body>
@@ -304,22 +322,23 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     </div>
 
         <a href="../Inicio.php">Inicio</a>
+        <a href="AddAnimal.php">Agregar Ganado</a>
+
         <div class="submenu">
-        <a href="#" class="submenu-toggle">Tratamientos y vacunas</a>
+        <a href="#" class="submenu-toggle">Tratamientos y Vacunacion</a>
         <div class="submenu-content">
-            <a href="vacunacion.php">Vacunación</a>
-            <a href="reporteVacunas.php">Registro de Vacunas</a>
-            <a href="Tratamiento.php">Tratamientos</a>
-            <a href="reporteTrata.php">Registro de Tratamientos</a>
+        <a href="reporteVacunas.php">Registro de Vacunas</a>
+        <a href="Tratamiento.php">Tratamientos</a>
+        <a href="reporteTrata.php">Registro de Tratamientos</a>
         </div>
     </div>
     <div class="submenu">
         <a href="Insemina.php" class="submenu-toggle">Inseminación Artificial</a>
         <div class="submenu-content">
-            <a href="reporteinsemina.php">Registro de Inseminaciones</a>
+        <a href="reporteinsemina.php">Registro de Inseminaciones</a>
 
         </div>
-    </div>
+    </div>  
     <a href="AddEvento.php">Agregar Eventos</a>
     <div class="submenu">
         <a href="reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
@@ -327,9 +346,8 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             <a href="Addlugar.php">Agregar Nuevo Lugar</a>
             <a href="cambiarestablo.php">Cambiar a ganado de Lugar</a>
         </div>
-     </div>
+     </div>   
         <a href="UpDeAnimal.php">Vender o eliminar Ganado</a>
-        
     </nav>
 
 
@@ -338,25 +356,27 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
  
  <img src="../images/Toro.png" alt="Logo de Proyecto">
 
-     <h2>¡¡Agrega tu Ganado!!</h2>
-     <form action="AddAnimal.php" method="POST">
-     <input type="text" class="input-field" name="Nombre" placeholder="Nombre" required><br>
-         <input type="text" class="input-field" name="Raza" placeholder="Raza" required><br>
-         <input type="date"class="input-field" name="Edad" placeholder="Edad (año-mes-dia)" required><br>
-         <input type="text" class="input-field" name="Peso" placeholder="Peso en lbs" required><br>
-         <div class="input-field">
-              
-              <label>
-                <input type="radio" name="sexo" value="Hembra" />
-                Hembra
-              </label>
-              <label>
-                <input type="radio" name="sexo" value="Macho" />
-                Macho
-              </label>
-            
-            </div>
-            <select name="lugar" class="input-field" ><br>
+     <h2>¿A qué lugar moveremos el ganado?</h2>
+     
+     <form action="cambiarestablo.php" method="POST" onsubmit="return pedirContrasena();">
+
+     <select name="genealogia" class="input-field" id="animalSelect" required><br>
+        <option selected disabled>--Seleccionar Animal--</option>
+        <?php
+include("conexion.php");
+// Consulta para obtener las pólizas
+$sql = $conexion->query("SELECT * FROM animales wHERE IdUser = $id_usuario");
+while ($resultado = $sql->fetch_assoc()) {
+    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] . "</option>";
+}
+?>
+</select>
+
+<div id="origenContainer" style="display: none;">
+        <input type="text" class="input-field" name="lugarorigen" id="lugarorigen" placeholder="Nombre del lugar" readonly disabled><br>
+    </div>
+
+<select name="lugar" class="input-field" ><br>
         <option selected disabled>--Selecciona a que lugar irá--</option>
         <?php
 include("conexion.php");
@@ -367,35 +387,44 @@ while ($resultado = $sql->fetch_assoc()) {
 }
 ?>
 </select>
-<br><br>
-        <select name="genealogia" class="input-field" required><br>
-        <option selected disabled>--Seleccionar Genealogia Padre--</option>
-        <?php
-include("conexion.php");
-// Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Macho' AND IdUser = $id_usuario");
-while ($resultado = $sql->fetch_assoc()) {
-    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] . "</option>";
-}
-?>
-</select>
+      
 
-<select name="genealogia2" class="input-field" required><br>
-        <option selected disabled>--Seleccionar Genealogia Madre--</option>
-        <?php
-include("conexion.php");
-// Consulta para obtener las pólizas
-$sql = $conexion->query("SELECT * FROM animales Where  sexo = 'Hembra' AND IdUser = $id_usuario");
-while ($resultado = $sql->fetch_assoc()) {
-    echo "<option value='" . $resultado['ID'] . "'>" . $resultado['Nombre']  . " ---- Raza: " . $resultado['Raza'] .  "</option>";
-}
-?>
-</select>
-
+<input type="hidden" name="password_check" id="password_check">
         
         
-         <button type="submit" class="btn">Agregar</button>
+         <button type="submit" class="btn">Aceptar Cambios</button><br><br>
+         
      </form>
+     <button type="submit" class="btn2" onclick="location.href='../Inicio.php'">Cancelar</button>
+
+
+     <script>
+    document.getElementById("animalSelect").addEventListener("change", function () {
+        var animalId = this.value;
+
+        if (animalId) {
+            fetch("obtener_establo.php?animal_id=" + animalId)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("lugarorigen").value = data;
+                    document.getElementById("origenContainer").style.display = "block";
+                });
+        } else {
+            document.getElementById("origenContainer").style.display = "none";
+        }
+    });
+</script>    
+     <script>
+function pedirContrasena() {
+    const pass = prompt("Por favor, introduce tu contraseña para confirmar:");
+    if (pass === null || pass.trim() === "") {
+        alert("Operación cancelada. Se requiere contraseña.");
+        return false;
+    }
+    document.getElementById("password_check").value = pass;
+    return true;
+}
+</script>    
      
  </div>
     </div>
@@ -403,9 +432,11 @@ while ($resultado = $sql->fetch_assoc()) {
     <footer class="footer">
         <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
         <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
-        <a href="mailto:correo@example.com"><i class="fas fa-envelope"></i> Correo</a>
+        <a href="danilobo2018@gmail.com"><i class="fas fa-envelope"></i> Correo</a>
         <a href="tel:+123456789"><i class="fas fa-phone"></i> +504 9945-4789</a>
     </footer>
+    </body>
+    </html>
 
     <script>
     let menuBtn = document.getElementById('menuBtn');
@@ -443,43 +474,51 @@ while ($resultado = $sql->fetch_assoc()) {
     });
 </script>
 
-</body>
-</html>
+
 <?php
+include("conexion.php");
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $Nombre = trim($_POST['Nombre']);
-    $Raza = trim($_POST['Raza']);
-    $edad = trim($_POST['Edad']);
-    $Peso = trim($_POST['Peso']);
-    $Genealogia = !empty($_POST['genealogia']) ? $_POST['genealogia'] : "NULL";
-    $Genealogia2 = !empty($_POST['genealogia2']) ? $_POST['genealogia2'] : "NULL";
-    $sexo = !empty($_POST['sexo']) ? $_POST['sexo'] : "NULL";
-    $lugar = !empty($_POST['lugar']) ? $_POST['lugar'] : "NULL";
+$id_usuario = $_SESSION['ID'];
 
 
-    if (strtotime($edad) ) {
-        // Convertir las fechas a un formato adecuado si es necesario
-        $edad = date('Y-m-d', strtotime($edad));
-        
-    }
+$idAnimal = intval($_POST['genealogia'] ?? 0);
+$idNuevolugar = intval($_POST['lugar'] ?? 0); // puede estar vacío
+$passwordIngresada = $_POST['password_check'] ?? '';
 
-    // Validar que los campos requeridos no estén vacíos
-    if (empty($Nombre) || empty($Raza) || empty($edad)) {
-        echo "<script>alert('Error: Los campos Nombre, Raza y Edad son obligatorios.'); window.history.back();</script>";
-        exit();
-    }
 
-    // Insertar datos en la base de datos
-    $sqlPersona = "INSERT INTO animales (Nombre, Raza, Edad, Peso, Sexo, GenealogiaPadre, GenealogiaMadre, IdUser, Idestablo)
-                   VALUES ('$Nombre', '$Raza', '$edad', '$Peso','$sexo', '$Genealogia', '$Genealogia2', '$id_usuario', '$lugar')";
-
-    if (mysqli_query($conexion, $sqlPersona)) {
-        echo "<script>alert('Registro exitoso.'); window.location.href = 'AddAnimal.php';</script>";
-    } else {
-        echo "<script>alert('Error al registrar: " . mysqli_error($conexion) . "'); window.history.back();</script>";
-    }
+if ($idAnimal <= 0 || $idNuevolugar <= 0 || empty($passwordIngresada)) {
+    // Puedes registrar el error en un log si quieres
+    // error_log("Datos incompletos: idAnimal = $idAnimal, password vacía = " . empty($passwordIngresada));
+    exit; // solo termina el script sin mostrar nada
 }
+
+
+$stmt = $conexion->prepare("SELECT password FROM usuario WHERE ID = ?");
+$stmt->bind_param("i", $id_usuario);
+$stmt->execute();
+$stmt->bind_result($passwordHashDB);
+$stmt->fetch();
+$stmt->close();
+
+
+if (!password_verify($passwordIngresada, $passwordHashDB)) {
+    echo "<script>alert('Contraseña incorrecta'); window.history.back();</script>";
+    exit;
+}
+
+
+$stmt = $conexion->prepare("UPDATE animales SET Idestablo = ? WHERE ID = ?");
+$stmt->bind_param("ii", $idNuevolugar, $idAnimal);
+if ($stmt->execute()) {
+    echo "<script>alert('El animal ha sido trasladado con éxito.'); window.location.href='cambiarestablo.php?animal_id=$idAnimal';</script>";
+} else {
+    echo "Error al actualizar el establo: " . $stmt->error;
+}
+$stmt->close();
 ?>
+
+
+
+
     

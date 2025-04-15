@@ -17,7 +17,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de establo</title>
+    <title>Reporte de inseminaciones</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
@@ -344,8 +344,9 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         <a href="Addlugar.php">Agregar Nuevo Lugar</a>
             <a href="cambiarestablo.php">Cambiar a ganado de Lugar</a>
         </div>
-     </div>
-        <a href="UpDeAnimal.php">Vender o eliminar Ganado</a>
+      </div>
+        <a href="UpDeAnimal.php">Vender o eliminar Ganado</a>  
+        
     </nav>
 
 
@@ -358,49 +359,46 @@ $rows_per_page = intval($_GET['rows_per_page'] ?? 5);
 $page = max(intval($_GET['page'] ?? 1), 1);
 $offset = ($page - 1) * $rows_per_page;
 
-
-if (preg_match('/^[0-9]+$/', $busqueda)) { // Si es un número (ID)
-    $condicion = "animales.ID = '$busqueda'";
-} else { // Si es un texto (Nombre, Raza, Establo, Usuario)
+// Condiciones de búsqueda
+if (preg_match('/^[0-9]+$/', $busqueda)) {
+    $condicion = "ai.ID = '$busqueda' OR ad.ID = '$busqueda'";
+} else {
     $condicion = "
-        animales.Nombre LIKE '%$busqueda%' OR
-        animales.Raza LIKE '%$busqueda%' OR
-        usuario.Nombre LIKE '%$busqueda%' OR
-        usuario.Apellido LIKE '%$busqueda%' OR
-        establo.Nombre LIKE '%$busqueda%' OR
-        establo.Ubicacion LIKE '%$busqueda%'
+        ai.Nombre LIKE '%$busqueda%' OR
+        ai.Raza LIKE '%$busqueda%' OR
+        ei.Nombre LIKE '%$busqueda%' OR
+        ad.Nombre LIKE '%$busqueda%' OR
+        ad.Raza LIKE '%$busqueda%' OR
+        ed.Nombre LIKE '%$busqueda%' OR
+        ia.Muestra LIKE '%$busqueda%' OR
+        ia.Resultado LIKE '%$busqueda%'
     ";
 }
 
-
-$where_clause = "WHERE animales.IdUser = $id_usuario"; // Filtra por el usuario autenticado
+$where_clause = "WHERE ai.IdUser = $id_usuario";
 if (!empty($busqueda)) {
     $where_clause .= " AND ($condicion)";
 }
 
-
+// Consulta principal con paginación
 $consulta = $conexion->query("
-    SELECT DISTINCT animales.ID, animales.Nombre AS Nombre_Animal,
-        CASE
-            WHEN TIMESTAMPDIFF(YEAR, animales.Edad, CURDATE()) = 1 THEN '1 Año'
-            WHEN TIMESTAMPDIFF(YEAR, animales.Edad, CURDATE()) > 1 THEN 
-                CONCAT(TIMESTAMPDIFF(YEAR, animales.Edad, CURDATE()), ' Años')
-            WHEN TIMESTAMPDIFF(MONTH, animales.Edad, CURDATE()) = 1 THEN '1 Mes'
-            WHEN TIMESTAMPDIFF(MONTH, animales.Edad, CURDATE()) > 1 THEN 
-                CONCAT(TIMESTAMPDIFF(MONTH, animales.Edad, CURDATE()), ' Meses')
-            ELSE
-                'Menos de un mes'
-        END AS Edad,
-        animales.Raza,
-        animales.Sexo,
-        establo.Nombre AS Nombre_Establo,
-        establo.Ubicacion AS Ubicacion,
-        CONCAT(usuario.Nombre, ' ', usuario.Apellido) AS Nombre_Usuario
-    FROM animales
-    LEFT JOIN establo ON animales.Idestablo = establo.ID
-    LEFT JOIN usuario ON animales.IdUser = usuario.ID
+    SELECT 
+        ia.FechaRealizada, 
+        ia.Muestra, 
+        ai.Nombre AS Nombre_inseminada, 
+        ai.Raza, 
+        ei.Nombre AS Establo_Proveniente, 
+        ad.Nombre AS Nombre_Donador, 
+        ad.Raza AS Raza_Donador, 
+        ed.Nombre AS Establo_Donador, 
+        ia.Resultado  
+    FROM inseminaartificial ia 
+    INNER JOIN animales ai ON ia.IdAnimal = ai.ID 
+    INNER JOIN animales ad ON ia.DonadorID = ad.ID 
+    INNER JOIN establo ei ON ei.ID = ai.Idestablo 
+    INNER JOIN establo ed ON ed.ID = ad.Idestablo 
     $where_clause
-    ORDER BY animales.ID ASC -- Ordenar por ID
+    ORDER BY ia.FechaRealizada DESC
     LIMIT $rows_per_page OFFSET $offset
 ");
 
@@ -408,12 +406,14 @@ if (!$consulta) {
     die("Error en la consulta SQL: " . $conexion->error);
 }
 
-// Obtener el total de registros con el mismo filtro
+// Consulta total de registros
 $total_consulta = $conexion->query("
-    SELECT COUNT(DISTINCT animales.ID) as total 
-    FROM animales
-    LEFT JOIN establo ON animales.Idestablo = establo.ID
-    LEFT JOIN usuario ON animales.IdUser = usuario.ID
+    SELECT COUNT(*) AS total
+    FROM inseminaartificial ia 
+    INNER JOIN animales ai ON ia.IdAnimal = ai.ID 
+    INNER JOIN animales ad ON ia.DonadorID = ad.ID 
+    INNER JOIN establo ei ON ei.ID = ai.Idestablo 
+    INNER JOIN establo ed ON ed.ID = ad.Idestablo 
     $where_clause
 ");
 
@@ -423,9 +423,8 @@ if (!$total_consulta) {
 
 $total_rows = $total_consulta->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $rows_per_page);
-
-
 ?>
+
 
 <form id="search-form">
     <input 
@@ -444,53 +443,64 @@ $total_pages = ceil($total_rows / $rows_per_page);
 
 <script>
     let typingTimer;
-    const doneTypingInterval = 500000000; 
+    const doneTypingInterval = 50000000; // milisegundos de espera
 
     function debouncedSubmit() {
-        clearTimeout(typingTimer); 
+        clearTimeout(typingTimer); // limpia el temporizador previo
         typingTimer = setTimeout(() => {
             document.getElementById('search-form').submit();
         }, doneTypingInterval);
     }
 </script>
 
+
 <div id="printable-table">
 <div id="print-header" style="display: none; text-align: center; margin-bottom: 20px;">
-    <h2>Reporte de Establos y sus Animales</h2>
+    <h2>Reporte de Inseminación Artificial</h2>
     <p id="fecha-impresion"></p>
 </div>
 
+
+
+
     <table id="animalTable">
         <tr>
-            <th>Nombre</th>
-            <th>Edad</th>
-            <th>sexo</th>
+            <th>Fecha realizada</th>
+            <th>Muestra usada</th>
+            <th>Animal Inseminado</th>
             <th>Raza</th>
             <th>Establo</th>
-            <th>Ubicación</th>
-            <th>Dueño</th>
+            <th>Animal Donador</th>
+            <th>Raza</th>
+            <th>Establo_Donador</th>
+            <th>Resultado</th>
         
         </tr>
         <?php while ($row = $consulta->fetch_assoc()) { ?>
             <tr>
-                <td><?= $row['Nombre_Animal'] ?></td>
-                <td><?= $row['Edad'] ?></td>
-                <td><?= $row['Sexo'] ?></td>
+                <td><?= $row['FechaRealizada'] ?></td>
+                <td><?= $row['Muestra'] ?></td>
+                <td><?= $row['Nombre_inseminada'] ?></td>
                 <td><?= $row['Raza'] ?></td>
-                <td><?= $row['Nombre_Establo'] ?></td>
-                <td><?= $row['Ubicacion'] ?></td>
-                <td><?= $row['Nombre_Usuario'] ?></td>
+                <td><?= $row['Establo_Proveniente'] ?></td>
+                <td><?= $row['Nombre_Donador'] ?></td>
+                <td><?= $row['Raza'] ?></td>
+                <td><?= $row['Establo_Donador'] ?></td>
+                <td><?= $row['Resultado'] ?></td>
                 
             </tr>
         <?php } ?>
     </table>
+</div>
+
 
     <div class="pagination">
         <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
             <a href="?search=<?= htmlspecialchars($busqueda) ?>&rows_per_page=<?= $rows_per_page ?>&page=<?= $i ?>">
                 <?= $i ?>
             </a>
-        <?php } ?>
+        <?php } 
+        ?>
     </div>
 
     <div style="text-align: center; margin: 20px 0;">
@@ -536,8 +546,8 @@ function printTable() {
 }
 </script>
     
-    </div>
 </div>
+
     <footer class="footer">
         <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
         <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
@@ -582,4 +592,8 @@ function printTable() {
 </script>
 
 </body>
+
+
+
+
 </html>

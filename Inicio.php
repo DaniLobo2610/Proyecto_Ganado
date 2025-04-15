@@ -249,15 +249,15 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         <a href="#" class="submenu-toggle">Tratamientos y vacunas</a>
         <div class="submenu-content">
             <a href="php/vacunacion.php">Vacunación</a>
-            <a href="#">Registro de Vacunas</a>
+            <a href="php/reporteVacunas.php">Registro de Vacunas</a>
             <a href="php/Tratamiento.php">Tratamientos</a>
-            <a href="#">Registro de Tratamientos</a>
+            <a href="php/reporteTrata.php">Registro de Tratamientos</a>
         </div>
     </div>
     <div class="submenu">
         <a href="php/Insemina.php" class="submenu-toggle">Inseminación Artificial</a>
         <div class="submenu-content">
-            <a href="#">Registro de Inseminaciones</a>
+            <a href="php/reporteinsemina.php">Registro de Inseminaciones</a>
 
         </div>
     </div>
@@ -265,10 +265,11 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     <div class="submenu">
         <a href="php/reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
         <div class="submenu-content">
-            <a href="php/Addlugar.php">Agregar Nuevo Lugar</a>
-
-        </div>    
-
+        <a href="/phpAddlugar.php">Agregar Nuevo Lugar</a>
+            <a href="php/cambiarestablo.php">Cambiar a ganado de Lugar</a>
+        </div> 
+    </div>
+        <a href="php/UpDeAnimal.php">Vender o eliminar Ganado</a>
         
     </nav>
 

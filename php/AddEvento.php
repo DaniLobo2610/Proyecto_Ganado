@@ -308,24 +308,27 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         <a href="#" class="submenu-toggle">Tratamientos y vacunas</a>
         <div class="submenu-content">
             <a href="vacunacion.php">Vacunación</a>
-            <a href="#">Registro de Vacunas</a>
+            <a href="reporteVacunas.php">Registro de Vacunas</a>
             <a href="Tratamiento.php">Tratamientos</a>
-            <a href="#">Registro de Tratamientos</a>
+            <a href="reporteTrata.php">Registro de Tratamientos</a>
         </div>
     </div>
     <div class="submenu">
         <a href="Insemina.php" class="submenu-toggle">Inseminación Artificial</a>
         <div class="submenu-content">
-            <a href="#">Registro de Inseminaciones</a>
+        <a href="reporteinsemina.php">Registro de Inseminaciones</a>
 
         </div>
     </div>
+    <a href="AddEvento.php">Agregar Eventos</a>
     <div class="submenu">
         <a href="reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
         <div class="submenu-content">
-            <a href="Addlugar.php">Agregar Nuevo Lugar</a>
-
-        </div>      
+        <a href="Addlugar.php">Agregar Nuevo Lugar</a>
+            <a href="cambiarestablo.php">Cambiar a ganado de Lugar</a>
+        </div>
+     </div>
+        <a href="UpDeAnimal.php">Vender o eliminar Ganado</a>      
 
         
     </nav>
