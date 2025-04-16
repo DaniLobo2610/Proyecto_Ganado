@@ -7,39 +7,39 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #1d1d1d;
+            background-color: #E3C8B1;
             color: white;
             font-family: Arial, sans-serif;
         }
         .login-container {
             box-sizing: content-box;
             width: 300px;
-            margin: 100px auto;
+            margin: 20px auto;
             padding: 30px;
-            background-color: #333;
+            background-color: white;
             border-radius: 10px;
             text-align: center;
         }
         .login-container h2 {
-            color: red;
+            color: #E0523F;
             margin-bottom: 20px;
         }
         .input-field {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            background-color: #444;
-            color: white;
+            background-color: rgb(226, 224, 222); ;
+            color: black;
             border: 1px solid #888;
             border-radius: 5px;
         }
         .input-field::placeholder {
-            color: #bbb;
+            color: black;
         }
         .btn {
             width: 100%;
             padding: 10px;
-            background-color: red;
+            background-color:rgb(161, 101, 49);
             color: white;
             border: none;
             border-radius: 5px;
@@ -49,17 +49,19 @@
         .btn2 {
             width: 100%;
             padding: 10px;
-            background-color: blue;
+            background-color:rgb(98, 98, 99);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
         .btn:hover {
-            background-color: #cc0000;
+            background-color: rgb(180, 111, 51);
+            color: black;
         }
         .btn2:hover {
-            background-color:rgb(20, 4, 142);
+            background-color:rgb(122, 122, 124);
+            color: black;
         }
         .signup-link {
             display: block;
@@ -91,7 +93,7 @@
 }
 
 .footer {
-            background: #222;
+            background: rgb(161, 101, 49);
             color: white;
             text-align: center;
             padding: 20px;
@@ -121,7 +123,7 @@
 
     <div class="login-container">
  
-    <img src="../images/Toro.png" alt="Logo de Proyecto">
+    <img src="../images/logolamburg.jpg" width="250" height="150">
 
         <h2>¡¡Vamos Registrate!!</h2>
         <form action="registrarse.php" method="POST">
