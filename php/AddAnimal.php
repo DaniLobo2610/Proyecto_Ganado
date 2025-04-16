@@ -259,11 +259,11 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     padding: 10px;
     color: white;
     text-decoration: none;
-    border-bottom: 1px solid  #b17036;
+    border-bottom: 1px solid #b17036;
 }
 
 .submenu-content a:hover {
-    background:  #b17036;
+    background: #b17036;
 }
 
 
