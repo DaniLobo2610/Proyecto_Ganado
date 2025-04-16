@@ -37,13 +37,13 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     
         header {
             width: 100%;
-            background: url('../images/banner1.png') no-repeat center center;
+            background: url('../images/banner.jpg') no-repeat center center;
             background-size: cover;
             color: white;
             font-size: 3em;
             font-weight: bold;
             text-align: center;
-            padding: 25px 0;
+            padding: 30px 0;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
             position: relative;
             z-index: 1;
@@ -66,8 +66,8 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             position: fixed;
             top: 15px;
             left: 15px;
-            background: #333;
-            color: white;
+            background:rgb(216, 216, 214);
+            color: black;
             padding: 10px 15px;
             cursor: pointer;
             font-size: 24px;
@@ -83,7 +83,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             top: 0;
             width: 250px;
             height: 100%;
-            background: #222;
+            background: #636b3f;
             padding-top: 60px;
             transition: left 0.3s;
             color: white;
@@ -96,12 +96,12 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             text-decoration: none;
             color: white;
             font-size: 18px;
-            border-bottom: 1px solid #bd1212;
+            border-bottom: 1px solid rgb(0, 0, 0);
             transition: 0.3s;
         }
 
         .menu a:hover {
-            background: #bd1212;
+            background:#b17036;
         }
 
         .menu.active {
@@ -110,13 +110,8 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 
         /* Clase que ajusta el contenido cuando el menú está abierto */
         body.menu-open .content {
-            margin-left: 250px; 
-            
+            margin-left: 250px; /* Deja espacio para el menú */
         }
-
-        * {
-    box-sizing: border-box;
-}
 
         .content {
             flex: 1;
@@ -128,15 +123,15 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             background: #222;
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             width: 100%;
             position: relative;
-            z-index: 10;
+            z-index: 30;
         }
 
         .footer a {
             color: white;
-            margin: 0 10px;
+            margin: 0 20px;
             text-decoration: none;
             font-size: 20px;
         }
@@ -145,14 +140,18 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             color: #ffcc00;
         }
 
+        * {
+    box-sizing: border-box;
+}
+
         .user-info {
-    padding: 12px;
+    padding: 10px;
     display: flex;
     align-items: center;
-    border-top: 1px solid #bd1212;
-    background-color: #222;
+    border-top: 1px solid rgb(0, 0, 0);
+    background-color: #636b3f;
     color: white;
-    font-size: 13px;
+    font-size: 12px;
     gap: 5px;
 }
 
@@ -179,37 +178,38 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             width: 300px;
             margin: -30px auto;
             padding: 30px;
-            background-color: #333;
+            background-color: white;
             border-radius: 10px;
             text-align: center;
         }
         .login-container h2 {
-            color: red;
+            color: brown;
             margin-bottom: 20px;
         }
         .input-field {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            background-color: #444;
-            color: white;
+            background-color: rgb(226, 224, 222); ;
+            color: black;
             border: 1px solid #888;
             border-radius: 5px;
         }
         .input-field::placeholder {
-            color: #bbb;
+            color: black;
         }
         .btn {
             width: 100%;
             padding: 10px;
-            background-color: red;
+            background-color:rgb(161, 101, 49);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
         .btn:hover {
-            background-color: #cc0000;
+            background-color: rgb(180, 111, 51);
+            color: black;
         }
         .signup-link {
             display: block;
@@ -236,7 +236,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
 }
 
 .message.error {
-    background-color: #f44336;
+    background-color:  #b17036;
     color: white;
 }
 
@@ -259,11 +259,11 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     padding: 10px;
     color: white;
     text-decoration: none;
-    border-bottom: 1px solid #bd1212;
+    border-bottom: 1px solid  #b17036;
 }
 
 .submenu-content a:hover {
-    background: #bd1212;
+    background:  #b17036;
 }
 
 
@@ -273,7 +273,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     </style>
 </head>
 <body>
-    <header>Ganadería & Agricultura</header>
+<header>FINCA MACHADO LAMBURG</header>
 
     <div class="menu-btn" id="menuBtn">
         <i class="fas fa-bars"></i>
@@ -338,7 +338,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
  
  <img src="../images/Toro.png" alt="Logo de Proyecto">
 
-     <h2>¡¡Agrega tu Ganado!!</h2>
+     <h2>Agregar animal</h2>
      <form action="AddAnimal.php" method="POST">
      <input type="text" class="input-field" name="Nombre" placeholder="Nombre" required><br>
          <input type="text" class="input-field" name="Raza" placeholder="Raza" required><br>

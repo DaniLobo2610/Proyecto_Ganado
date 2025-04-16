@@ -39,7 +39,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
         }
     
         header {
-            background: url('images/banner1.png') no-repeat center center;
+            background: url('images/banner.jpg') no-repeat center center;
             background-size: cover;
             color: white;
             font-size: 3em;
@@ -67,8 +67,8 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             position: fixed;
             top: 15px;
             left: 15px;
-            background: #333;
-            color: white;
+            background:rgb(216, 216, 214);
+            color: black;
             padding: 10px 15px;
             cursor: pointer;
             font-size: 24px;
@@ -84,7 +84,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             top: 0;
             width: 250px;
             height: 100%;
-            background: #222;
+            background: #636b3f;
             padding-top: 60px;
             transition: left 0.3s;
             color: white;
@@ -97,12 +97,12 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
             text-decoration: none;
             color: white;
             font-size: 18px;
-            border-bottom: 1px solid #bd1212;
+            border-bottom: 1px solid rgb(0, 0, 0);
             transition: 0.3s;
         }
 
         .menu a:hover {
-            background: #bd1212;
+            background:#b17036;
         }
 
         .menu.active {
@@ -149,8 +149,8 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     padding: 10px;
     display: flex;
     align-items: center;
-    border-top: 1px solid #bd1212;
-    background-color: #222;
+    border-top: 1px solid rgb(0, 0, 0);
+    background-color: #636b3f;
     color: white;
     font-size: 12px;
     gap: 5px;
@@ -214,7 +214,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     </style>
 </head>
 <body>
-    <header>Ganadería & Agricultura</header>
+    <header>FINCA MACHADO LAMBURG</header>
 
     <div class="menu-btn" id="menuBtn">
         <i class="fas fa-bars"></i>
@@ -265,7 +265,7 @@ $id_usuario = $_SESSION['ID']; // Ahora sí está definido correctamente
     <div class="submenu">
         <a href="php/reportestablo.php" class="submenu-toggle">Reporte de lugares de ganado</a>
         <div class="submenu-content">
-        <a href="/phpAddlugar.php">Agregar Nuevo Lugar</a>
+        <a href="php/Addlugar.php">Agregar Nuevo Lugar</a>
             <a href="php/cambiarestablo.php">Cambiar a ganado de Lugar</a>
         </div> 
     </div>
